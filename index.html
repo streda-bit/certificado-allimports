@@ -48,7 +48,9 @@ button:disabled{opacity:.6}
 
 /* ===== CERTIFICADO A4 ===== */
 .sheet{width:794px;min-height:1123px;background:#fff;color:#111;padding:28px 26px 30px;font-size:11px;box-shadow:0 4px 24px rgba(15,29,77,.15)}
-.sheet *{line-height:1.35}
+.sheet *{line-height:1.35;font-family:'Inter',sans-serif}
+.sheet td,.sheet th,.sheet p,.sheet small,.sheet b,.sheet span,.sheet div{font-size:11px}
+.sheet .emp b{font-size:15px}.sheet .tt{font-size:14px}.sheet .h{font-size:13px}.sheet .ncp .tt{font-size:14px}
 .rec{border:1px solid #222;border-radius:3px;font-size:11px}
 .rec .t{padding:7px 9px;border-bottom:1px solid #222}
 .rec .b{display:grid;grid-template-columns:1fr 2.2fr 1.6fr}
@@ -62,20 +64,21 @@ button:disabled{opacity:.6}
 .logo img{width:100%;height:auto}
 .emp{text-align:center;display:flex;flex-direction:column;justify-content:center}
 .emp b{font-size:15px;color:var(--navy);margin-bottom:5px;letter-spacing:.02em}
-.emp p{font-weight:700;font-size:11.5px}
+.emp p{font-weight:700;font-size:11px}
 .ncp{text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px}
 .ncp .tt{font-size:14px;font-weight:700;color:var(--navy);line-height:1.2}
-.ncp .nn small{display:block;font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.08em}
-.ncp .nn b{font-size:12px}
+.ncp .nn small{display:block;font-size:11px;color:#111;text-transform:uppercase;letter-spacing:0;font-weight:400}
+.ncp .nn b{font-size:11px}
 .h{font-size:13px;font-weight:700;margin:12px 0 4px;color:var(--navy)}
-table.t{width:100%;border-collapse:collapse;font-size:10.5px;table-layout:fixed}
+table.t{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
 table.t th,table.t td{border:1px solid #222;padding:4px 6px;text-align:left;vertical-align:top;word-break:break-word}
 table.t th{background:#e9ecf2;font-weight:700}
+table.pay th,table.pay td{white-space:nowrap;padding:4px 5px}
 table.t td.r,table.t th.r{text-align:left}
-.sheet .terms{border:1px solid #222;padding:8px 10px;font-size:10.5px;white-space:pre-wrap}
-.sign{margin:46px auto 0;width:360px;border-top:1px solid #111;text-align:center;padding-top:5px;font-weight:700;font-size:12px}
-.sign small{display:block;font-weight:400;color:#555;font-size:10px}
-.nf{margin-top:14px;text-align:center;font-size:10px;color:#444}
+.sheet .terms{border:1px solid #222;padding:8px 10px;font-size:11px;white-space:pre-wrap}
+.sign{margin:46px auto 0;width:360px;border-top:1px solid #111;text-align:center;padding-top:5px;font-weight:700;font-size:11px}
+.sign small{display:block;font-weight:400;color:#111;font-size:11px}
+.nf{margin-top:14px;text-align:center;font-size:11px;color:#111}
 .nf b{color:var(--navy)}
 @media print{
  body{background:#fff}
@@ -172,7 +175,8 @@ table.t td.r,table.t th.r{text-align:left}
   </table>
 
   <div class="h">PAGAMENTO</div>
-  <table class="t">
+  <table class="t pay">
+    <colgroup><col style="width:10%"><col style="width:10%"><col style="width:11%"><col style="width:13%"><col style="width:9%"><col style="width:11%"><col style="width:12%"><col style="width:9%"><col style="width:15%"></colgroup>
     <tr><th>Troca</th><th>Dinheiro</th><th>TED/Boleto</th><th>PIX</th><th>Frete</th><th>Descontos</th><th>Cartões</th><th>Parcelas</th><th>Total</th></tr>
     <tr><td id="oTroca"></td><td id="oDin"></td><td id="oTed"></td><td id="oPix"></td><td id="oFrete"></td><td id="oDesc"></td><td id="oCar"></td><td id="oParc"></td><td id="oTotal"><b></b></td></tr>
   </table>
