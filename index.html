@@ -6,7 +6,8 @@
 <title>Certificado de Compra · All Imports</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--navy:#0f1d4d;--red:#d91e18;--bg:#f2f4f8;--card:#fff;--line:#dde2ec;--txt:#16203a;--mut:#6b7590}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -310,17 +311,32 @@ function validar(){
   if(!val('cNome')||!its[0].mod||!its.some(i=>i.val>0)){alert('Preencha pelo menos: nome do cliente, modelo e valor do aparelho.');return false}
   return true;
 }
+async function gerarPDF(){
+  window.scrollTo(0,0);
+  const canvas=await html2canvas(sheet,{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollX:0,scrollY:0,windowWidth:1100,
+    onclone:doc=>{doc.getElementById('scaler').style.transform='none';doc.getElementById('stage').style.height='auto';doc.getElementById('sheet').style.boxShadow='none'}});
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF({unit:'pt',format:'a4',orientation:'portrait'});
+  const PW=595.28,PH=841.89;
+  const ratio=PW/canvas.width;               // pt por pixel do canvas
+  const pagePx=Math.floor(PH/ratio);         // altura de uma página em pixels do canvas
+  let y=0,first=true;
+  while(y<canvas.height-4){
+    const h=Math.min(pagePx,canvas.height-y);
+    const part=document.createElement('canvas');part.width=canvas.width;part.height=h;
+    const ctx=part.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,part.width,part.height);
+    ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);
+    if(!first)pdf.addPage();first=false;
+    pdf.addImage(part.toDataURL('image/jpeg',0.95),'JPEG',0,0,PW,Math.min(PH,h*ratio));
+    y+=h;
+  }
+  pdf.save(nomeArquivo());
+}
 $('btnPdf').addEventListener('click',async()=>{
   if(!validar())return;
   const b=$('btnPdf');b.disabled=true;b.textContent='Gerando…';
-  let holder;
-  try{
-    holder=document.createElement('div');holder.style.cssText='position:fixed;left:-10000px;top:0;width:794px';
-    const clone=sheet.cloneNode(true);clone.style.boxShadow='none';holder.appendChild(clone);document.body.appendChild(holder);
-    await html2pdf().set({margin:0,filename:nomeArquivo(),image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,width:794,windowWidth:794},jsPDF:{unit:'px',format:[794,1123],orientation:'portrait',hotfixes:['px_scaling']},pagebreak:{mode:['css','legacy'],avoid:'tr'}}).from(clone).save();
-    numero=proxNumero(true);render();
-  }catch(e){alert('Não consegui gerar o PDF. Use o botão Imprimir e escolha "Salvar como PDF".')}
-  if(holder&&holder.parentNode)holder.parentNode.removeChild(holder);
+  try{await gerarPDF();numero=proxNumero(true);render();}
+  catch(e){console.error(e);alert('Não consegui gerar o PDF. Use o botão Imprimir e escolha "Salvar como PDF".')}
   b.disabled=false;b.textContent='⬇ Baixar PDF';
 });
 $('btnPrint').addEventListener('click',()=>{if(!validar())return;window.print();});
